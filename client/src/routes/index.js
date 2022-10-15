@@ -7,7 +7,7 @@ function AppRoutes() {
     <Router>
       <Routes>
         <Route path="/" element={<MoviesContainer />} />
-        <Route path="/:id" element={<MovieDetailsContainer />} />
+        <Route path="/movies/:id" element={<MovieDetailsContainer />} />
       </Routes>
     </Router>
   );

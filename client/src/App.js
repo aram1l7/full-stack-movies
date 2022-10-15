@@ -1,6 +1,6 @@
 import React from "react";
 import AppRoutes from "./routes";
-import "styles/index.scss";
+import "assets/styles/index.scss";
 
 function App() {
   return <AppRoutes />;
