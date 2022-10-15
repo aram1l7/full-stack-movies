@@ -1,0 +1,4 @@
+
+export const FETCH_INIT_REQUEST = 'movies/FETCH_INIT_REQUEST'
+export const FETCH_INIT_FAILED = 'movies/FETCH_INIT_FAILED'
+export const FETCH_INIT_COMPLETED = 'movies/FETCH_INIT_COMPLETED'
