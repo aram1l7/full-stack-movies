@@ -14,4 +14,31 @@ const fetchInitCompleted = (data) => ({
   payload: data,
 });
 
-export { fetchInitRequest, fetchInitFailed, fetchInitCompleted };
+const fetchFavoriteRequest = (bool) => ({
+  type: types.FETCH_FAVORITES_REQUEST,
+  payload: bool,
+});
+const fetchFavoriteFailed = (err) => ({
+  type: types.FETCH_FAVORITES_FAILED,
+  payload: err,
+});
+
+const fetchFavoriteCompleted = (data) => ({
+  type: types.FETCH_FAVORITES_COMPLETED,
+  payload: data,
+});
+
+const filterFavorites = (bool) => ({
+  type: types.FILTER_FAVORITES,
+  payload: bool,
+});
+
+export {
+  fetchInitRequest,
+  fetchInitFailed,
+  fetchInitCompleted,
+  fetchFavoriteCompleted,
+  fetchFavoriteFailed,
+  fetchFavoriteRequest,
+  filterFavorites,
+};

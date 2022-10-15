@@ -1,6 +1,9 @@
 import styled from "styled-components";
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { filterFavorites } from "state/modules/movies/actions";
+import { favoriteSelector } from "state/modules/movies/selectors";
 
 const StyledHeader = styled.div`
   width: 100%;
@@ -79,22 +82,36 @@ const Plus = styled.span`
   font-weight: 800;
 `;
 
-function Header() {
-  return (
-    <StyledHeader>
-      <StyledTitle>iMovies</StyledTitle>
-      <BtnContainer>
-        <StarContainer>
-          <StarButton />
-          Favorites
-        </StarContainer>
-        <AddButton>
-          <Plus>+</Plus>
-          Add new movie
-        </AddButton>
-      </BtnContainer>
-    </StyledHeader>
-  );
+class Header extends Component {
+  render() {
+    const { isFavorites, setIsFavorites } = this.props;
+    return (
+      <StyledHeader>
+        <StyledTitle>iMovies</StyledTitle>
+        <BtnContainer>
+          <StarContainer
+            className={isFavorites ? "active-favorites" : ""}
+            onClick={() => setIsFavorites(!isFavorites)}
+          >
+            <StarButton />
+            Favorites
+          </StarContainer>
+          <AddButton>
+            <Plus>+</Plus>
+            Add new movie
+          </AddButton>
+        </BtnContainer>
+      </StyledHeader>
+    );
+  }
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  isFavorites: favoriteSelector(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setIsFavorites: (bool) => dispatch(filterFavorites(bool)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

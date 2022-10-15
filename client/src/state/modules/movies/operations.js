@@ -1,5 +1,8 @@
-import { getMovies } from "api";
+import { getMovies, getFavorites } from "api";
 import {
+  fetchFavoriteCompleted,
+  fetchFavoriteFailed,
+  fetchFavoriteRequest,
   fetchInitCompleted,
   fetchInitFailed,
   fetchInitRequest,
@@ -13,6 +16,18 @@ export const fetchInitDataOperation = () => {
       dispatch(fetchInitCompleted(data));
     } catch (error) {
       dispatch(fetchInitFailed(error));
+    }
+  };
+};
+
+export const fetchFavoritesData = () => {
+  return async (dispatch) => {
+    dispatch(fetchFavoriteRequest(true));
+    try {
+      const { data } = await getFavorites();
+      dispatch(fetchFavoriteCompleted(data));
+    } catch (error) {
+      dispatch(fetchFavoriteFailed(error));
     }
   };
 };

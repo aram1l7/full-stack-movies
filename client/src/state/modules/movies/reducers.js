@@ -27,6 +27,35 @@ let reducersMap = {
       data,
     };
   },
+  [types.FETCH_FAVORITES_REQUEST]: (state, action) => {
+    return {
+      ...state,
+      isFavoriteFetching: action.payload,
+    };
+  },
+  [types.FETCH_FAVORITES_FAILED]: (state, action) => {
+    return {
+      ...state,
+      isFavoriteError: true,
+      error: action.payload,
+      isFavoriteFetching: false,
+    };
+  },
+  [types.FETCH_FAVORITES_COMPLETED]: (state, action) => {
+    const favorites = action.payload;
+    return {
+      ...state,
+      isFavoriteSuccess: true,
+      isFavoriteFetching: false,
+      favorites,
+    };
+  },
+  [types.FILTER_FAVORITES]: (state, action) => {
+    return {
+      ...state,
+      showFavorites: action.payload,
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

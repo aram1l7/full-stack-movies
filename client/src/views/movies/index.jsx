@@ -25,10 +25,10 @@ const MovieCard = styled(Link)`
   color: white;
 `;
 
-function Movies({ data }) {
+function Movies({ data, isFavorites }) {
   return (
     <div>
-      <Heading>Movies</Heading>
+      <Heading>{isFavorites ? "Favorites" : "Movies"}</Heading>
       <Grid>
         {data?.map((item) => {
           return (
