@@ -2,10 +2,9 @@ const { client } = require("../db/connect");
 const seedTableData = async () => {
   await client.connect();
   const query = `INSERT INTO users (name) VALUES ('user1'), ('user2'), ('user3');
-   INSERT INTO movies (title, is_favorite , year, runtime, genre, writer) 
-   VALUES ('Spider man', FALSE, '08-02-2017', '140 min', 'Action', 'Steve Ditko'),
-          ('Harry potter', TRUE, '08-02-2022', '80 min', 'Adventure', 'Super huveo');
-   INSERT INTO user_movies (user_id, movie_id) VALUES (1,1), (1,2), (2,1), (3,1);
+   INSERT INTO movies (title, is_favorite , year, runtime, genre, director) 
+   VALUES ('Spider man', FALSE, '08-02-2017', '140 min', '{ "Action", "Sci-fi" }', 'Steve Ditko'),
+          ('Harry potter', TRUE, '08-02-2022', '80 min', '{ "Action", "Travel" }', 'Super huveo');
         `;
   client
     .query(query)

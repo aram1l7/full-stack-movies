@@ -10,7 +10,12 @@ const createTables = async () => {
           year VARCHAR(25) NOT NULL,
           runtime VARCHAR(25) NOT NULL,
           genre TEXT[] NOT NULL,
-          writer TEXT[] NOT NULL
+          director VARCHAR(35) NOT NULL,
+          country VARCHAR(35),
+          plot VARCHAR(255),
+          awards VARCHAR(255),
+          poster_src VARCHAR(255),
+          imdb_rating VARCHAR(20)
         );
   CREATE TABLE IF NOT EXISTS user_movies(
          id SERIAL PRIMARY KEY, 

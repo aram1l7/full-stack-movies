@@ -1,6 +1,8 @@
 const createOrSelectUser = require("../queries/createUser");
 const matchUserMovie = require("../queries/matchUserMovie");
-
+const axios = require("axios");
+const { toLowerKeys } = require("../utils");
+require("dotenv").config();
 const getAll = async (req, res) => {
   try {
     const { rows } = await req.client.query(`SELECT * FROM movies`);
@@ -36,14 +38,36 @@ const getById = async (req, res) => {
 };
 
 const addMovie = async (req, res) => {
-  const { title, year, runtime, genre, writer, username } = req.body;
+  const { title, year, runtime, genre, director, username } = req.body;
+  const args = [title, year, runtime, genre, director];
   try {
-    const movie = await req.client.query(
-      `
-    INSERT INTO movies (title, year, runtime, genre, writer) 
-    VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [title, year, runtime, genre, writer]
+    const { data } = await axios.get(
+      `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${title}`
     );
+    let finalData = toLowerKeys(data);
+    let movie = {};
+    if (finalData.response === "True") {
+      const { country, awards, plot, imdbrating, poster } = finalData;
+      args.push(country, awards, plot, imdbrating, poster);
+      movie = await req.client.query(
+        `
+        INSERT INTO movies 
+               (title, year, runtime, genre, 
+                director, country, awards, plot,
+                imdb_rating, poster_src
+                ) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id
+        `,
+        [...args]
+      );
+    } else {
+      movie = await req.client.query(
+        `
+      INSERT INTO movies (title, year, runtime, genre, director) 
+      VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+        [...args]
+      );
+    }
 
     const user = await createOrSelectUser(req.client, username);
 
@@ -62,7 +86,7 @@ const addMovie = async (req, res) => {
 
 const updateById = async (req, res) => {
   const movieId = req.params.id;
-  const { title, year, runtime, genre, writer, username } = req.body;
+  const { title, year, runtime, genre, director, username } = req.body;
   const user = await createOrSelectUser(req.client, username);
   const movieMatch = await matchUserMovie(req.client, movieId, user.id);
   if (movieMatch) {
@@ -73,10 +97,10 @@ const updateById = async (req, res) => {
             year = $2,
             runtime = $3,
             genre = $4,
-            writer = $5
+            director = $5
         WHERE id = $6    
       `,
-      [title, year, runtime, genre, writer, movieMatch.movie_id]
+      [title, year, runtime, genre, director, movieMatch.movie_id]
     );
     return res.status(200).json({ success: true });
   }
