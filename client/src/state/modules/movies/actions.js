@@ -48,6 +48,11 @@ const updateMovieSuccess = (data) => ({
   payload: data,
 });
 
+const deleteMovieSuccess = (id) => ({
+  type: types.DELETE_MOVIE_SUCCESS,
+  payload: id,
+});
+
 export {
   fetchInitRequest,
   fetchInitFailed,
@@ -59,4 +64,5 @@ export {
   setFilteredMovies,
   addMovieSuccess,
   updateMovieSuccess,
+  deleteMovieSuccess,
 };

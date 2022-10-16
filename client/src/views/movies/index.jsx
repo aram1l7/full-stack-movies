@@ -25,7 +25,13 @@ import {
 } from "./styles";
 import { useNavigate } from "react-router-dom";
 
-function Movies({ data, isFavorites, setIsFavorites, openEditModal }) {
+function Movies({
+  data,
+  isFavorites,
+  setIsFavorites,
+  openEditModal,
+  openDeleteModal,
+}) {
   const inputRef = useRef();
   const timeout = useRef();
   const dispatch = useDispatch();
@@ -109,7 +115,13 @@ function Movies({ data, isFavorites, setIsFavorites, openEditModal }) {
                     >
                       <img src={editIcon} alt="edit" />
                     </div>
-                    <div className="delete-btn">
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteModal(item.id);
+                      }}
+                      className="delete-btn"
+                    >
                       <img
                         className="trash-can"
                         src={deleteIcon}

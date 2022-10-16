@@ -1,3 +1,4 @@
+import { deleteMovieById } from "api";
 import { updateMovieById } from "api";
 import Modal from "components/modal";
 import Layout from "layout";
@@ -5,6 +6,7 @@ import React, { Component } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { connect } from "react-redux";
 import { updateMovieSuccess } from "state/modules/movies/actions";
+import { deleteMovieSuccess } from "state/modules/movies/actions";
 import { filterFavorites } from "state/modules/movies/actions";
 import { fetchInitDataOperation } from "state/modules/movies/operations";
 import { favoriteSelector } from "state/modules/movies/selectors";
@@ -12,6 +14,7 @@ import { favoriteDataSelector } from "state/modules/movies/selectors";
 import { moviesSelector } from "state/modules/movies/selectors";
 import { formatDate } from "utils/formatDate";
 import AddEditMovieForm from "views/add-edit-movie";
+import ConfirmModal from "views/confirm-modal";
 import Movies from "views/movies";
 import UsernameForm from "views/username-form";
 
@@ -26,8 +29,10 @@ class MoviesContainer extends Component {
     changedValues: {},
     showUsernameModal: false,
     id: null,
+    openDeleteModal: false,
+    deleteAction: false,
   };
-  onSubmit = async (data, bool) => {
+  onEdit = async (data, bool) => {
     console.log(data, "data");
     if (!bool) {
       this.setState({
@@ -62,7 +67,9 @@ class MoviesContainer extends Component {
       });
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
     }
   };
   handleClose = () => {
@@ -71,9 +78,40 @@ class MoviesContainer extends Component {
       formData: {},
     });
   };
+  closeDeleteModal = () => {
+    this.setState({
+      id: null,
+      openDeleteModal: false,
+    });
+  };
+
+  onDelete = async (username) => {
+    const { id } = this.state;
+    const { deleteMovie } = this.props;
+    this.setState({
+      id: null,
+      showUsernameModal: false,
+    });
+    try {
+      await deleteMovieById(id, username);
+      toast.success(`Movie was successfully deleted`);
+      deleteMovie(id);
+    } catch (error) {
+      if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
   render() {
     const { movies, isFavorites, favorites, setIsFavorites } = this.props;
-    const { formData, editModalOpen, showUsernameModal } = this.state;
+    const {
+      formData,
+      editModalOpen,
+      showUsernameModal,
+      openDeleteModal,
+      deleteAction,
+    } = this.state;
     const modalStyles = {
       width: "400px",
       backgroundColor: "#fff",
@@ -97,6 +135,12 @@ class MoviesContainer extends Component {
                 id,
               });
             }}
+            openDeleteModal={(id) => {
+              this.setState({
+                id,
+                openDeleteModal: true,
+              });
+            }}
             setIsFavorites={setIsFavorites}
             isFavorites={isFavorites}
             data={isFavorites ? favorites : movies}
@@ -114,7 +158,7 @@ class MoviesContainer extends Component {
               id="edit-form"
               onClose={this.handleClose}
               values={formData}
-              onSubmit={(data) => this.onSubmit(data)}
+              onSubmit={(data) => this.onEdit(data)}
             />
           </Modal>
         )}
@@ -124,17 +168,40 @@ class MoviesContainer extends Component {
             handleClose={() => {
               this.setState({
                 showUsernameModal: false,
-                editModalOpen: true,
+                editModalOpen: deleteAction ? false : true,
               });
             }}
-            buttonText="Save"
+            buttonText="Submit"
             title="Enter username"
             formId={"enter-username"}
             isForm
           >
             <UsernameForm
               id="enter-username"
-              onSubmit={(data) => this.onSubmit(data, true)}
+              onSubmit={(data) => {
+                deleteAction
+                  ? this.onDelete(data.username)
+                  : this.onEdit(data, true);
+              }}
+            />
+          </Modal>
+        )}
+        {openDeleteModal && (
+          <Modal
+            title={`Delete movie`}
+            style={modalStyles}
+            handleClose={this.closeDeleteModal}
+            withoutFooter
+          >
+            <ConfirmModal
+              onCancel={this.closeDeleteModal}
+              onConfirm={() => {
+                this.setState({
+                  deleteAction: true,
+                  showUsernameModal: true,
+                  openDeleteModal: false,
+                });
+              }}
             />
           </Modal>
         )}
@@ -153,6 +220,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchInitialData: () => dispatch(fetchInitDataOperation()),
   setIsFavorites: (bool) => dispatch(filterFavorites(bool)),
   updateMovie: (data) => dispatch(updateMovieSuccess(data)),
+  deleteMovie: (id) => dispatch(deleteMovieSuccess(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoviesContainer);

@@ -88,6 +88,12 @@ let reducersMap = {
       }),
     };
   },
+  [types.DELETE_MOVIE_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      data: [...state.data].filter((item) => item.id !== action.payload),
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

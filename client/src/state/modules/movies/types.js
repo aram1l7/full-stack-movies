@@ -8,3 +8,4 @@ export const FETCH_MOVIE_COMPLETED = "movies/FETCH_MOVIE_COMPLETED";
 export const FILTER_MOVIES = "movies/FILTER_MOVIES";
 export const ADD_MOVIE_SUCCESS = "movies/ADD_MOVIE_SUCCESS";
 export const UPDATE_MOVIE_SUCCESS = "movies/UPDATE_MOVIE_SUCCESS";
+export const DELETE_MOVIE_SUCCESS = "movies/DELETE_MOVIE_SUCCESS";

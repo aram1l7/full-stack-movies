@@ -19,3 +19,7 @@ export const createMovie = (data) => {
 export const updateMovieById = (id, data) => {
   return axios.put(`/api/movies/${id}`, data);
 };
+
+export const deleteMovieById = (id, username) => {
+  return axios.delete(`/api/movies/${id}/${username}`);
+};
