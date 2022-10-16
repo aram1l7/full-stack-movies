@@ -38,6 +38,11 @@ const setFilteredMovies = (data) => ({
   payload: data,
 });
 
+const addMovieSuccess = (data) => ({
+  type: types.ADD_MOVIE_SUCCESS,
+  payload: data,
+});
+
 export {
   fetchInitRequest,
   fetchInitFailed,
@@ -47,4 +52,5 @@ export {
   fetchMovieStart,
   fetchMovieCompleted,
   setFilteredMovies,
+  addMovieSuccess,
 };

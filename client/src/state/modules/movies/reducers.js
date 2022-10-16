@@ -68,6 +68,12 @@ let reducersMap = {
       [name]: data,
     };
   },
+  [types.ADD_MOVIE_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      data: [...state.data, action.payload],
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

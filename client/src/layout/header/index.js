@@ -1,3 +1,4 @@
+import { createMovie } from "api";
 import Modal from "components/modal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -5,6 +6,9 @@ import { filterFavorites } from "state/modules/movies/actions";
 import { favoriteSelector } from "state/modules/movies/selectors";
 import AddMovieForm from "views/add-movie";
 import UsernameForm from "views/username-form";
+import toast, { Toaster } from "react-hot-toast";
+import { addMovieSuccess } from "state/modules/movies/actions";
+
 import {
   AddButton,
   BtnContainer,
@@ -15,11 +19,11 @@ import {
 
 class Header extends Component {
   state = {
-    addMovieModalOpen: true,
+    addMovieModalOpen: false,
     showUsernameModal: false,
     formValues: {},
   };
-  onSubmit = (data, bool) => {
+  onSubmit = async (data, bool) => {
     if (!bool) {
       this.setState({
         formValues: data,
@@ -34,7 +38,23 @@ class Header extends Component {
       ...data,
       genre: `{${formValues.genre}}`,
     };
-    console.log(finalData, "final");
+    this.setState({
+      showUsernameModal: false,
+    });
+
+    try {
+      const { addMovieCompleted } = this.props;
+      const res = await createMovie(finalData);
+      addMovieCompleted(res.data);
+      toast.success("Movie was successfully created!");
+    } catch (error) {
+      if (error.response.data.detail.includes("already exists")) {
+        toast.error(`Movie ${formValues.title} already exists`);
+      }
+    }
+    this.setState({
+      formValues: {},
+    });
   };
   render() {
     const { addMovieModalOpen, showUsernameModal, formValues } = this.state;
@@ -47,6 +67,7 @@ class Header extends Component {
     };
     return (
       <>
+        <Toaster />
         <StyledHeader>
           <StyledTitle to="/">iMovies</StyledTitle>
           <BtnContainer
@@ -108,12 +129,12 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  isFavorites: favoriteSelector(state),
-});
+const mapStateToProps = (state) => {
+  return {};
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  setIsFavorites: (bool) => dispatch(filterFavorites(bool)),
+  addMovieCompleted: (data) => dispatch(addMovieSuccess(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

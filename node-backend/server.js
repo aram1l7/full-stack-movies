@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-
 app.use("/api/movies", movieRoutes);
 
 app.use("/search", searchRoutes);

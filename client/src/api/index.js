@@ -11,3 +11,7 @@ export const getFavorites = () => {
 export const getMovieById = (id) => {
   return axios.get(`/api/movies/${id}`);
 };
+
+export const createMovie = (data) => {
+  return axios.post("/api/movies", { ...data });
+};

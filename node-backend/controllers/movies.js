@@ -56,7 +56,7 @@ const addMovie = async (req, res) => {
                 director, country, awards, plot,
                 imdb_rating, poster_src
                 ) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *
         `,
         [...args]
       );
@@ -64,7 +64,7 @@ const addMovie = async (req, res) => {
       movie = await req.client.query(
         `
       INSERT INTO movies (title, year, runtime, genre, director) 
-      VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`,
         [...args]
       );
     }
@@ -77,7 +77,7 @@ const addMovie = async (req, res) => {
         `,
       [user.id, movie.rows[0].id]
     );
-    res.json(movie.rows[0]);
+    return res.status(200).json(movie.rows[0]);
   } catch (err) {
     console.log(err, "err");
     return res.status(400).json(err);
