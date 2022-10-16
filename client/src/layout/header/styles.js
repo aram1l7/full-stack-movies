@@ -36,12 +36,18 @@ export const AddButton = styled.div`
   border-radius: 8px;
   transition: background-color 0.2s ease;
   &:hover {
-    background: none;
-    color: yellow;
+    box-shadow: rgb(143 143 143 / 20%) 0px 8px 24px;
   }
 `;
 
 export const Plus = styled.span`
   font-size: 16px;
   font-weight: 800;
+`;
+
+export const FormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 `;

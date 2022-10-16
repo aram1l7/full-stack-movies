@@ -80,7 +80,7 @@ export const StarContainer = styled.div`
   display: flex;
   background-color: white;
   border-radius: 8px;
-  align-items: center;
+  align-items: end;
   font-weight: 600;
   gap: 10px;
   padding: 0.5rem 1rem;
