@@ -2,17 +2,22 @@ import Input from "components/input";
 import { FormWrapper } from "layout/header/styles";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { BtnWrapper } from "./styles";
 
-function AddEditMovieForm({ onSubmit, id, values }) {
+function AddEditMovieForm({ onSubmit, id, values, isEdit, onClose }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: useMemo(() => {
       return values;
     }, [values]),
   });
+
+  const form = watch();
+  const isDisabled = JSON.stringify(values) === JSON.stringify(form);
 
   return (
     <>
@@ -99,6 +104,16 @@ function AddEditMovieForm({ onSubmit, id, values }) {
           name="director"
           errors={errors}
         />
+        {isEdit && (
+          <BtnWrapper>
+            <button disabled={isDisabled} form={id}>
+              Save
+            </button>
+            <button className="cancel" onClick={onClose}>
+              Cancel
+            </button>
+          </BtnWrapper>
+        )}
       </FormWrapper>
     </>
   );

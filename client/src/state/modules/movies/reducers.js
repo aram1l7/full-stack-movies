@@ -74,6 +74,20 @@ let reducersMap = {
       data: [...state.data, action.payload],
     };
   },
+  [types.UPDATE_MOVIE_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      data: [...state.data].map((item) => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            ...action.payload,
+          };
+        }
+        return item;
+      }),
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

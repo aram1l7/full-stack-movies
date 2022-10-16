@@ -15,3 +15,7 @@ export const getMovieById = (id) => {
 export const createMovie = (data) => {
   return axios.post("/api/movies", { ...data });
 };
+
+export const updateMovieById = (id, data) => {
+  return axios.put(`/api/movies/${id}`, data);
+};

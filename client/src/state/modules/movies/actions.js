@@ -43,6 +43,11 @@ const addMovieSuccess = (data) => ({
   payload: data,
 });
 
+const updateMovieSuccess = (data) => ({
+  type: types.UPDATE_MOVIE_SUCCESS,
+  payload: data,
+});
+
 export {
   fetchInitRequest,
   fetchInitFailed,
@@ -53,4 +58,5 @@ export {
   fetchMovieCompleted,
   setFilteredMovies,
   addMovieSuccess,
+  updateMovieSuccess,
 };
