@@ -7,3 +7,7 @@ export const getMovies = () => {
 export const getFavorites = () => {
   return axios.get("/api/movies/favorites");
 };
+
+export const getMovieById = (id) => {
+  return axios.get(`/api/movies/${id}`);
+};

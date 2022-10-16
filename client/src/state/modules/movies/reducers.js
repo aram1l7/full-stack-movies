@@ -36,6 +36,31 @@ let reducersMap = {
       showFavorites: action.payload,
     };
   },
+  [types.FETCH_MOVIE_START]: (state, action) => {
+    return {
+      ...state,
+      movieFetching: true,
+    };
+  },
+  [types.FETCH_MOVIE_FAIL]: (state, action) => {
+    return {
+      ...state,
+      movieFetching: false,
+      movieError: true,
+      error: action.payload,
+    };
+  },
+  [types.FETCH_MOVIE_COMPLETED]: (state, action) => {
+    const { data } = action.payload;
+    return {
+      ...state,
+      movieFetching: false,
+      movieError: false,
+      movieSuccess: true,
+      error: null,
+      movie: data,
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

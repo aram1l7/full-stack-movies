@@ -34,18 +34,19 @@ const MovieCard = styled(Link)`
 const ImgWrapper = styled.div`
   width: 100%;
   height: 250px;
-`;
 
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const MovieTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  margin-top: 0.5rem;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -58,16 +59,65 @@ const DescriptionWrapper = styled.div`
   }
 `;
 
-function Movies({ data, isFavorites }) {
+const StarButton = styled.div`
+  background-color: #3f4df1;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+`;
+
+const StarContainer = styled.div`
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  align-items: center;
+  font-weight: 600;
+  gap: 10px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+  &:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+`;
+
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+function Movies({ data, isFavorites, setIsFavorites }) {
   return (
     <div>
-      <Heading>{isFavorites ? "Favorites" : "Movies"}</Heading>
+      <BtnWrapper>
+        <Heading>{isFavorites ? "Favorites" : "Movies"}</Heading>
+        <StarContainer
+          className={isFavorites ? "active-favorites" : ""}
+          onClick={() => setIsFavorites(!isFavorites)}
+        >
+          <StarButton />
+          Favorites
+        </StarContainer>
+      </BtnWrapper>
       <Grid>
         {data?.map((item) => {
           return (
             <MovieCard to={`/movies/${item.id}`} key={item.id}>
               <ImgWrapper>
-                <Img src={item.poster_src || movieImg} alt={item.title} />
+                <img src={item.poster_src || movieImg} alt={item.title} />
               </ImgWrapper>
               <MovieTitle>{item.title}</MovieTitle>
               <DescriptionWrapper>

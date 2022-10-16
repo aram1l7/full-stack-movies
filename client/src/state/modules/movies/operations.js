@@ -1,11 +1,12 @@
+import { getMovieById } from "api";
 import { getMovies, getFavorites } from "api";
 import {
-  fetchFavoriteCompleted,
-  fetchFavoriteFailed,
-  fetchFavoriteRequest,
   fetchInitCompleted,
   fetchInitFailed,
   fetchInitRequest,
+  fetchMovieCompleted,
+  fetchMovieError,
+  fetchMovieStart,
 } from "./actions";
 
 export const fetchInitDataOperation = () => {
@@ -17,6 +18,19 @@ export const fetchInitDataOperation = () => {
       dispatch(fetchInitCompleted(data));
     } catch (error) {
       dispatch(fetchInitFailed(error));
+    }
+  };
+};
+
+export const fetchMovieDataOperation = (id) => {
+  return async (dispatch) => {
+    dispatch(fetchMovieStart());
+    try {
+      const data = await getMovieById(id);
+
+      dispatch(fetchMovieCompleted(data));
+    } catch (error) {
+      dispatch(fetchMovieError(error));
     }
   };
 };

@@ -23,37 +23,7 @@ const StyledTitle = styled(Link)`
   color: #fff;
 `;
 
-const StarButton = styled.div`
-  background-color: yellow;
-  clip-path: polygon(
-    50% 0%,
-    61% 35%,
-    98% 35%,
-    68% 57%,
-    79% 91%,
-    50% 70%,
-    21% 91%,
-    32% 57%,
-    2% 35%,
-    39% 35%
-  );
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-`;
 
-const StarContainer = styled.div`
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  gap: 10px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  &:hover {
-    color: yellow;
-  }
-`;
 
 const BtnContainer = styled.div`
   display: flex;
@@ -84,18 +54,10 @@ const Plus = styled.span`
 
 class Header extends Component {
   render() {
-    const { isFavorites, setIsFavorites } = this.props;
     return (
       <StyledHeader>
-        <StyledTitle>iMovies</StyledTitle>
+        <StyledTitle to="/">iMovies</StyledTitle>
         <BtnContainer>
-          <StarContainer
-            className={isFavorites ? "active-favorites" : ""}
-            onClick={() => setIsFavorites(!isFavorites)}
-          >
-            <StarButton />
-            Favorites
-          </StarContainer>
           <AddButton>
             <Plus>+</Plus>
             Add new movie

@@ -14,11 +14,23 @@ const fetchInitCompleted = (data) => ({
   payload: data,
 });
 
-
-
 const filterFavorites = (bool) => ({
   type: types.FILTER_FAVORITES,
   payload: bool,
+});
+
+const fetchMovieStart = () => ({
+  type: types.FETCH_MOVIE_START,
+});
+
+const fetchMovieError = (err) => ({
+  type: types.FETCH_MOVIE_FAIL,
+  payload: err,
+});
+
+const fetchMovieCompleted = (data) => ({
+  type: types.FETCH_MOVIE_COMPLETED,
+  payload: data,
 });
 
 export {
@@ -26,4 +38,7 @@ export {
   fetchInitFailed,
   fetchInitCompleted,
   filterFavorites,
+  fetchMovieError,
+  fetchMovieStart,
+  fetchMovieCompleted,
 };
