@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import movieImg from "assets/images/movie.jpg";
+import { capitalizeWord } from "utils/capitalizeWord";
+import { removeNonAlphaNumeric } from "utils/removeNonAlphaNumeric";
 
 const Grid = styled.div`
   margin-top: 1.5rem;
@@ -119,7 +121,9 @@ function Movies({ data, isFavorites, setIsFavorites }) {
               <ImgWrapper>
                 <img src={item.poster_src || movieImg} alt={item.title} />
               </ImgWrapper>
-              <MovieTitle>{item.title}</MovieTitle>
+              <MovieTitle>
+                {capitalizeWord(removeNonAlphaNumeric(item.title))}
+              </MovieTitle>
               <DescriptionWrapper>
                 <span>Release date:</span>
                 <span>{item.year}</span>

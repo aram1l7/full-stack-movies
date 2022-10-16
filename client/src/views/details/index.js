@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import movieImg from "assets/images/movie.jpg";
+import { capitalizeWord } from "utils/capitalizeWord";
+import { removeNonAlphaNumeric } from "utils/removeNonAlphaNumeric";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -75,7 +77,9 @@ function Movie({ details }) {
             <img src={details.poster_src || movieImg} alt={details.title} />
           </ImgWrapper>
           <DetailsContainer>
-            <MovieTitle>{details.title}</MovieTitle>
+            <MovieTitle>
+              {capitalizeWord(removeNonAlphaNumeric(details.title))}
+            </MovieTitle>
             {details.awards && (
               <DescriptionWrapper>
                 <span>Awards:</span>

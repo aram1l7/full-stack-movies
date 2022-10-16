@@ -23,8 +23,6 @@ const StyledTitle = styled(Link)`
   color: #fff;
 `;
 
-
-
 const BtnContainer = styled.div`
   display: flex;
   align-items: center;
