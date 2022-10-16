@@ -20,9 +20,14 @@ const movieDataSelector = createSelector(
   (state) => state.movie
 );
 
+const movieSuccessSelector = createSelector(
+  innerStateSelector,
+  (state) => state.movieSuccess
+);
 export {
   moviesSelector,
   favoriteSelector,
   favoriteDataSelector,
   movieDataSelector,
+  movieSuccessSelector,
 };

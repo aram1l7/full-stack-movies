@@ -1,149 +1,108 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import React, { useRef } from "react";
 import movieImg from "assets/images/movie.jpg";
 import { capitalizeWord } from "utils/capitalizeWord";
 import { removeNonAlphaNumeric } from "utils/removeNonAlphaNumeric";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilteredMovies } from "state/modules/movies/actions";
+import { favoriteDataSelector } from "state/modules/movies/selectors";
+import { BtnWrapper, DescriptionWrapper, Grid, Heading, 
+  ImgWrapper, MovieCard, MovieTitle, NotFound,
+   SearchBar, StarButton, StarContainer } from "./styles";
 
-const Grid = styled.div`
-  margin-top: 1.5rem;
-  --auto-grid-min-size: 16rem;
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--auto-grid-min-size), 1fr)
-  );
-  grid-gap: 1rem;
-`;
-
-const Heading = styled.h1`
-  font-size: 2.5rem;
-  font-weight: bold;
-`;
-
-const MovieCard = styled(Link)`
-  padding: 1rem 0.5rem;
-  background-color: white;
-  font-size: 1.4rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  border-radius: 6px;
-  color: black;
-`;
-
-const ImgWrapper = styled.div`
-  width: 100%;
-  height: 250px;
-
-  & > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
-const MovieTitle = styled.h3`
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
-`;
-
-const DescriptionWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-  & > span {
-    font-size: 14px;
-    font-weight: 500;
-  }
-`;
-
-const StarButton = styled.div`
-  background-color: #3f4df1;
-  clip-path: polygon(
-    50% 0%,
-    61% 35%,
-    98% 35%,
-    68% 57%,
-    79% 91%,
-    50% 70%,
-    21% 91%,
-    32% 57%,
-    2% 35%,
-    39% 35%
-  );
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-`;
-
-const StarContainer = styled.div`
-  display: flex;
-  background-color: white;
-  border-radius: 8px;
-  align-items: center;
-  font-weight: 600;
-  gap: 10px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease;
-  &:hover {
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  }
-`;
-
-const BtnWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 
 function Movies({ data, isFavorites, setIsFavorites }) {
+  const inputRef = useRef();
+  const timeout = useRef();
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => favoriteDataSelector(state));
+  let requestUrl = isFavorites ? "/search/favorites" : "/search";
+  const handleDebounceSearch = () => {
+    clearTimeout(timeout.current);
+    if (!inputRef.current.value.trim()) {
+      dispatch(
+        setFilteredMovies({
+          name: isFavorites ? "favorites" : "data",
+          data: isFavorites ? favorites : data,
+        })
+      );
+    }
+    timeout.current = setTimeout(() => {
+      axios
+        .get(requestUrl, {
+          params: { title: inputRef.current.value },
+        })
+        .then((res) => {
+          dispatch(
+            setFilteredMovies({
+              name: isFavorites ? "favorites" : "data",
+              data: res.data,
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
+    }, 600);
+  };
   return (
     <div>
       <BtnWrapper>
         <Heading>{isFavorites ? "Favorites" : "Movies"}</Heading>
         <StarContainer
           className={isFavorites ? "active-favorites" : ""}
-          onClick={() => setIsFavorites(!isFavorites)}
+          onClick={() => {
+            setIsFavorites(!isFavorites);
+            inputRef.current.value = "";
+          }}
         >
           <StarButton />
           Favorites
         </StarContainer>
       </BtnWrapper>
-      <Grid>
-        {data?.map((item) => {
-          return (
-            <MovieCard to={`/movies/${item.id}`} key={item.id}>
-              <ImgWrapper>
-                <img src={item.poster_src || movieImg} alt={item.title} />
-              </ImgWrapper>
-              <MovieTitle>
-                {capitalizeWord(removeNonAlphaNumeric(item.title))}
-              </MovieTitle>
-              <DescriptionWrapper>
-                <span>Release date:</span>
-                <span>{item.year}</span>
-              </DescriptionWrapper>
-              <DescriptionWrapper>
-                <span>Runtime:</span>
-                <span>{item.runtime}</span>
-              </DescriptionWrapper>
-              <DescriptionWrapper>
-                <span>Genre:</span>
-                <span>{item.genre.map((el) => el).join(", ")}</span>
-              </DescriptionWrapper>
-              <DescriptionWrapper>
-                <span>Director:</span>
-                <span>{item.director}</span>
-              </DescriptionWrapper>
-            </MovieCard>
-          );
-        })}
-      </Grid>
+      <SearchBar
+        onChange={handleDebounceSearch}
+        ref={inputRef}
+        type="text"
+        placeholder={`Search for ${isFavorites ? "favorites" : "movies"}`}
+      />
+
+      {data.length > 0 ? (
+        <Grid>
+          {data.map((item) => {
+            return (
+              <MovieCard to={`/movies/${item.id}`} key={item.id}>
+                <ImgWrapper>
+                  <img src={item.poster_src || movieImg} alt={item.title} />
+                </ImgWrapper>
+                <MovieTitle>
+                  {capitalizeWord(removeNonAlphaNumeric(item.title))}
+                </MovieTitle>
+                <DescriptionWrapper>
+                  <span>Release date:</span>
+                  <span>{item.year}</span>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <span>Runtime:</span>
+                  <span>{item.runtime}</span>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <span>Genre:</span>
+                  <span>{item.genre.map((el) => el).join(", ")}</span>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <span>Director:</span>
+                  <span>{item.director}</span>
+                </DescriptionWrapper>
+              </MovieCard>
+            );
+          })}
+        </Grid>
+      ) : (
+        <NotFound>
+          No results found for your query {inputRef.current?.value}
+        </NotFound>
+      )}
     </div>
   );
 }

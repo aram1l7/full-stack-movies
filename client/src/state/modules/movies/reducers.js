@@ -61,6 +61,13 @@ let reducersMap = {
       movie: data,
     };
   },
+  [types.FILTER_MOVIES]: (state, action) => {
+    const { name, data } = action.payload;
+    return {
+      ...state,
+      [name]: data,
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

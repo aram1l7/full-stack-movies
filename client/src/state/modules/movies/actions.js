@@ -33,6 +33,11 @@ const fetchMovieCompleted = (data) => ({
   payload: data,
 });
 
+const setFilteredMovies = (data) => ({
+  type: types.FILTER_MOVIES,
+  payload: data,
+});
+
 export {
   fetchInitRequest,
   fetchInitFailed,
@@ -41,4 +46,5 @@ export {
   fetchMovieError,
   fetchMovieStart,
   fetchMovieCompleted,
+  setFilteredMovies,
 };

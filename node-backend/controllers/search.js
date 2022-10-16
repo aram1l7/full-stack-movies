@@ -1,15 +1,27 @@
-const axios = require("axios");
-require("dotenv").config();
 const search = async (req, res) => {
   try {
-    const { data } = await axios.get(
-      `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${req.query.title}`
+    const data = await req.client.query(
+      "SELECT * FROM movies WHERE title ILIKE $1",
+      ["%" + req.query.title + "%"]
     );
-    return res.status(200).json(data);
+    return res.status(200).json(data.rows);
   } catch (error) {
     console.log(error, "error");
     return res.status(400).json({ error });
   }
 };
 
-module.exports = { search };
+const searchFavorites = async (req, res) => {
+  try {
+    const data = await req.client.query(
+      "SELECT * FROM movies WHERE title ILIKE $1 AND is_favorite = true",
+      ["%" + req.query.title + "%"]
+    );
+    return res.status(200).json(data.rows);
+  } catch (error) {
+    console.log(error, "error");
+    return res.status(400).json({ error });
+  }
+};
+
+module.exports = { search, searchFavorites };
