@@ -3,7 +3,7 @@ import { FormWrapper } from "layout/header/styles";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-function AddMovieForm({ onSubmit, id, values }) {
+function AddEditMovieForm({ onSubmit, id, values }) {
   const {
     register,
     handleSubmit,
@@ -37,6 +37,8 @@ function AddMovieForm({ onSubmit, id, values }) {
           inputProps={{
             type: "date",
             placeholder: "Year",
+            min: "1997-01-01",
+            max: "2030-12-31",
           }}
           register={register}
           name="year"
@@ -102,4 +104,4 @@ function AddMovieForm({ onSubmit, id, values }) {
   );
 }
 
-export default AddMovieForm;
+export default AddEditMovieForm;

@@ -17,16 +17,15 @@ export const Heading = styled.h1`
   font-weight: bold;
 `;
 
-export const MovieCard = styled(Link)`
+export const MovieCard = styled.div`
   padding: 1rem 0.5rem;
   background-color: white;
   font-size: 1.4rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  text-decoration: none;
   display: flex;
   flex-direction: column;
   border-radius: 6px;
-  color: black;
+  cursor: pointer;
 `;
 
 export const ImgWrapper = styled.div`
@@ -111,5 +110,15 @@ export const NotFound = styled.div`
   color: #ef3333;
   margin-top: 10px;
   font-weight: 500;
-}
+`;
+
+export const MovieTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const IconWrapper = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 `;

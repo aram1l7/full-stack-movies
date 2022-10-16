@@ -6,15 +6,30 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilteredMovies } from "state/modules/movies/actions";
 import { favoriteDataSelector } from "state/modules/movies/selectors";
-import { BtnWrapper, DescriptionWrapper, Grid, Heading, 
-  ImgWrapper, MovieCard, MovieTitle, NotFound,
-   SearchBar, StarButton, StarContainer } from "./styles";
+import editIcon from "assets/icons/edit.svg";
+import deleteIcon from "assets/icons/delete.svg";
+import {
+  BtnWrapper,
+  DescriptionWrapper,
+  Grid,
+  Heading,
+  IconWrapper,
+  ImgWrapper,
+  MovieCard,
+  MovieTitle,
+  MovieTitleWrapper,
+  NotFound,
+  SearchBar,
+  StarButton,
+  StarContainer,
+} from "./styles";
+import { useNavigate } from "react-router-dom";
 
-
-function Movies({ data, isFavorites, setIsFavorites }) {
+function Movies({ data, isFavorites, setIsFavorites, openEditModal }) {
   const inputRef = useRef();
   const timeout = useRef();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const favorites = useSelector((state) => favoriteDataSelector(state));
   let requestUrl = isFavorites ? "/search/favorites" : "/search";
   const handleDebounceSearch = () => {
@@ -71,13 +86,38 @@ function Movies({ data, isFavorites, setIsFavorites }) {
         <Grid>
           {data.map((item) => {
             return (
-              <MovieCard to={`/movies/${item.id}`} key={item.id}>
+              <MovieCard
+                onClick={() => {
+                  navigate(`/movies/${item.id}`);
+                }}
+                key={item.id}
+              >
                 <ImgWrapper>
                   <img src={item.poster_src || movieImg} alt={item.title} />
                 </ImgWrapper>
-                <MovieTitle>
-                  {capitalizeWord(removeNonAlphaNumeric(item.title))}
-                </MovieTitle>
+                <MovieTitleWrapper>
+                  <MovieTitle>
+                    {capitalizeWord(removeNonAlphaNumeric(item.title))}
+                  </MovieTitle>
+                  <IconWrapper>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModal(item);
+                      }}
+                      className="edit-btn"
+                    >
+                      <img src={editIcon} alt="edit" />
+                    </div>
+                    <div className="delete-btn">
+                      <img
+                        className="trash-can"
+                        src={deleteIcon}
+                        alt="delete"
+                      />
+                    </div>
+                  </IconWrapper>
+                </MovieTitleWrapper>
                 <DescriptionWrapper>
                   <span>Release date:</span>
                   <span>{item.year}</span>

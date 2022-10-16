@@ -2,9 +2,7 @@ import { createMovie } from "api";
 import Modal from "components/modal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { filterFavorites } from "state/modules/movies/actions";
-import { favoriteSelector } from "state/modules/movies/selectors";
-import AddMovieForm from "views/add-movie";
+import AddEditMovieForm from "views/add-edit-movie";
 import UsernameForm from "views/username-form";
 import toast, { Toaster } from "react-hot-toast";
 import { addMovieSuccess } from "state/modules/movies/actions";
@@ -97,7 +95,7 @@ class Header extends Component {
             formId={"add-form"}
             isForm
           >
-            <AddMovieForm
+            <AddEditMovieForm
               id="add-form"
               values={formValues}
               onSubmit={(data) => this.onSubmit(data)}

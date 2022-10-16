@@ -23,3 +23,19 @@ body {
 .overflow-hidden {
   overflow: hidden;
 }
+
+.delete-btn {
+  width: 25px;
+  & > img {
+    filter: invert(25%) sepia(100%) saturate(6331%) hue-rotate(353deg)
+      brightness(111%) contrast(96%);
+  }
+}
+
+.edit-btn {
+  width: 20px;
+  & > img {
+    filter: invert(48%) sepia(83%) saturate(529%) hue-rotate(160deg)
+      brightness(105%) contrast(101%);
+  }
+}
