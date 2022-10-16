@@ -4,9 +4,6 @@ let initialState = {
   isSuccess: false,
   isLoading: false,
   isError: false,
-  isFavoriteFetching: false,
-  isFavoriteError: false,
-  isFavoriteSuccess: false,
   error: null,
   showFavorites: false,
 };

@@ -19,37 +19,17 @@ let reducersMap = {
     };
   },
   [types.FETCH_INIT_COMPLETED]: (state, action) => {
-    const data = action.payload;
+    const movies = action.payload[0].data;
+    const favorites = action.payload[1].data;
     return {
       ...state,
       isSuccess: true,
       isLoading: false,
-      data,
-    };
-  },
-  [types.FETCH_FAVORITES_REQUEST]: (state, action) => {
-    return {
-      ...state,
-      isFavoriteFetching: action.payload,
-    };
-  },
-  [types.FETCH_FAVORITES_FAILED]: (state, action) => {
-    return {
-      ...state,
-      isFavoriteError: true,
-      error: action.payload,
-      isFavoriteFetching: false,
-    };
-  },
-  [types.FETCH_FAVORITES_COMPLETED]: (state, action) => {
-    const favorites = action.payload;
-    return {
-      ...state,
-      isFavoriteSuccess: true,
-      isFavoriteFetching: false,
+      data: movies,
       favorites,
     };
   },
+
   [types.FILTER_FAVORITES]: (state, action) => {
     return {
       ...state,
