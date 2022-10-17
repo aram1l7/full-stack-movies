@@ -1,32 +1,34 @@
 import axios from "axios";
-let apiUrl =
+
+axios.defaults.baseURL =
   process.env.NODE_ENV === "production"
-    ? process.env.PROD_API_URL
+    ? process.env.REACT_APP_PROD_API_URL
     : "http://localhost:4000";
+
 export const getMovies = () => {
-  return axios.get(`${apiUrl}/api/movies`);
+  return axios.get(`/api/movies`);
 };
 
 export const getFavorites = () => {
-  return axios.get(`${apiUrl}/api/movies/favorites`);
+  return axios.get(`/api/movies/favorites`);
 };
 
 export const getMovieById = (id) => {
-  return axios.get(`${apiUrl}/api/movies/${id}`);
+  return axios.get(`/api/movies/${id}`);
 };
 
 export const createMovie = (data) => {
-  return axios.post(`${apiUrl}/api/movies`, { ...data });
+  return axios.post(`/api/movies`, { ...data });
 };
 
 export const updateMovieById = (id, data) => {
-  return axios.put(`${apiUrl}/api/movies/${id}`, data);
+  return axios.put(`/api/movies/${id}`, data);
 };
 
 export const deleteMovieById = (id, username) => {
-  return axios.delete(`${apiUrl}/api/movies/${id}/${username}`);
+  return axios.delete(`/api/movies/${id}/${username}`);
 };
 
 export const toggleFavorite = (id, data) => {
-  return axios.put(`${apiUrl}/api/movies/toggle-favorite/${id}`, data);
+  return axios.put(`/api/movies/toggle-favorite/${id}`, data);
 };
