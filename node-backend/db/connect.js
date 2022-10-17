@@ -1,11 +1,15 @@
-const { Client } = require("pg");
+const { Pool } = require("pg");
+require("dotenv").config();
 
-const client = new Client({
-  host: "localhost",
-  user: "postgres",
-  port: 5432,
-  password: "postgres",
-  database: "moviesapp",
+const connectionString =
+  process.env.NODE_ENV === "development"
+    ? "postgres://postgres:postgres@127.0.0.1:5432/moviesapp"
+    : process.env.DB_URL;
+
+console.log(connectionString, "conn");
+
+const client = new Pool({
+  connectionString,
 });
 
 const connectDb = async () => {
