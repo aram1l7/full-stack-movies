@@ -1,7 +1,7 @@
 import axios from "axios";
 let apiUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.PROD_URL
+    ? process.env.PROD_API_URL
     : "http://localhost:4000";
 export const getMovies = () => {
   return axios.get(`${apiUrl}/api/movies`);
