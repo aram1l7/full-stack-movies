@@ -31,6 +31,7 @@ function Movies({
   setIsFavorites,
   openEditModal,
   openDeleteModal,
+  openFavoriteModal,
 }) {
   const inputRef = useRef();
   const timeout = useRef();
@@ -127,6 +128,14 @@ function Movies({
                         src={deleteIcon}
                         alt="delete"
                       />
+                    </div>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openFavoriteModal(item);
+                      }}
+                    >
+                      <StarButton />
                     </div>
                   </IconWrapper>
                 </MovieTitleWrapper>

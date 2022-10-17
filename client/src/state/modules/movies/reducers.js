@@ -94,6 +94,28 @@ let reducersMap = {
       data: [...state.data].filter((item) => item.id !== action.payload),
     };
   },
+  [types.TOGGLE_FAVORITE_MOVIE]: (state, action) => {
+    const { id, favorite, currentItem } = action.payload;
+    let favorites = [...state.favorites];
+    if (favorite) {
+      favorites = [...favorites, currentItem];
+    } else {
+      favorites = [...favorites].filter((item) => item.id !== id);
+    }
+    return {
+      ...state,
+      data: [...state.data].map((el) => {
+        if (el.id === id) {
+          return {
+            ...el,
+            is_favorite: favorite,
+          };
+        }
+        return el;
+      }),
+      favorites,
+    };
+  },
 };
 
 export default createReducer(initialState)(reducersMap);

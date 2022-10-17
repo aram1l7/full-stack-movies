@@ -1,4 +1,5 @@
 import { deleteMovieById } from "api";
+import { toggleFavorite } from "api";
 import { updateMovieById } from "api";
 import Modal from "components/modal";
 import Layout from "layout";
@@ -6,6 +7,7 @@ import React, { Component } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { connect } from "react-redux";
 import { updateMovieSuccess } from "state/modules/movies/actions";
+import { toggleFavoriteAction } from "state/modules/movies/actions";
 import { deleteMovieSuccess } from "state/modules/movies/actions";
 import { filterFavorites } from "state/modules/movies/actions";
 import { fetchInitDataOperation } from "state/modules/movies/operations";
@@ -31,6 +33,9 @@ class MoviesContainer extends Component {
     id: null,
     openDeleteModal: false,
     deleteAction: false,
+    favorite: null,
+    currentItem: {},
+    toggleFavoriteAction: false,
   };
   onEdit = async (data, bool) => {
     console.log(data, "data");
@@ -103,6 +108,30 @@ class MoviesContainer extends Component {
     }
   };
 
+  onToggleFavorite = async (username) => {
+    const { id, favorite, currentItem } = this.state;
+    try {
+      await toggleFavorite(id, { username, favorite });
+      const { toggleMovieFavorite } = this.props;
+      toggleMovieFavorite({ id, favorite, currentItem });
+      toast.success(
+        `Movie was successfully ${
+          favorite ? "added to" : "removed from"
+        } favorites`
+      );
+    } catch (error) {
+      if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
+    }
+    this.setState({
+      showUsernameModal: false,
+      id: null,
+      toggleFavoriteAction: false,
+      currentItem: {},
+    });
+  };
+
   render() {
     const { movies, isFavorites, favorites, setIsFavorites } = this.props;
     const {
@@ -111,6 +140,7 @@ class MoviesContainer extends Component {
       showUsernameModal,
       openDeleteModal,
       deleteAction,
+      toggleFavoriteAction,
     } = this.state;
     const modalStyles = {
       width: "400px",
@@ -141,6 +171,15 @@ class MoviesContainer extends Component {
                 openDeleteModal: true,
               });
             }}
+            openFavoriteModal={(item) => {
+              this.setState({
+                favorite: !item.is_favorite,
+                id: item.id,
+                currentItem: { ...item, is_favorite: !item.is_favorite },
+                toggleFavoriteAction: true,
+                showUsernameModal: true,
+              });
+            }}
             setIsFavorites={setIsFavorites}
             isFavorites={isFavorites}
             data={isFavorites ? favorites : movies}
@@ -168,7 +207,8 @@ class MoviesContainer extends Component {
             handleClose={() => {
               this.setState({
                 showUsernameModal: false,
-                editModalOpen: deleteAction ? false : true,
+                editModalOpen:
+                  deleteAction || toggleFavoriteAction ? false : true,
               });
             }}
             buttonText="Submit"
@@ -181,6 +221,8 @@ class MoviesContainer extends Component {
               onSubmit={(data) => {
                 deleteAction
                   ? this.onDelete(data.username)
+                  : toggleFavoriteAction
+                  ? this.onToggleFavorite(data.username)
                   : this.onEdit(data, true);
               }}
             />
@@ -221,6 +263,7 @@ const mapDispatchToProps = (dispatch) => ({
   setIsFavorites: (bool) => dispatch(filterFavorites(bool)),
   updateMovie: (data) => dispatch(updateMovieSuccess(data)),
   deleteMovie: (id) => dispatch(deleteMovieSuccess(id)),
+  toggleMovieFavorite: (data) => dispatch(toggleFavoriteAction(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoviesContainer);

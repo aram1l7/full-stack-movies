@@ -23,3 +23,7 @@ export const updateMovieById = (id, data) => {
 export const deleteMovieById = (id, username) => {
   return axios.delete(`/api/movies/${id}/${username}`);
 };
+
+export const toggleFavorite = (id, data) => {
+  return axios.put(`/api/movies/toggle-favorite/${id}`, data);
+};

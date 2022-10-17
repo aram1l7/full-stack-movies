@@ -53,6 +53,10 @@ const deleteMovieSuccess = (id) => ({
   payload: id,
 });
 
+const toggleFavoriteAction = (data) => ({
+  type: types.TOGGLE_FAVORITE_MOVIE,
+  payload: data,
+});
 export {
   fetchInitRequest,
   fetchInitFailed,
@@ -65,4 +69,5 @@ export {
   addMovieSuccess,
   updateMovieSuccess,
   deleteMovieSuccess,
+  toggleFavoriteAction,
 };
