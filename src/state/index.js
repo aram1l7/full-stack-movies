@@ -7,11 +7,15 @@ function configureStore(initialState) {
   const rootReducer = combineReducers({
     ...reducers,
   });
+  const middlewares = [thunkMiddleware];
+  if (process.env.NODE_ENV === "development") {
+    middlewares.push(logger);
+  }
 
   return createStore(
     rootReducer,
     initialState,
-    applyMiddleware(thunkMiddleware, logger)
+    applyMiddleware(...middlewares)
   );
 }
 
